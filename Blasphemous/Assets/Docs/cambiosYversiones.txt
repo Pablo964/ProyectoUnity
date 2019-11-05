@@ -1,0 +1,25 @@
+Cambios
+
+v0.01 - 24/10/2019
+Escena con plataformas.
+Un jugador que se puede mover y saltar por el escenario.
+Agregado cinemachine.
+Agregada lógica de perder vida al colisionar con un enemigo.
+Agregado un enemigo pero por ahora no hace nada
+
+
+v0.02 - 29/10/2019
+Implementado casi completamente el ataque del jugador
+
+v0.03 - 30/10/2019
+Implementado ataque del jugador(falta mejorar animación)
+El enemigo se mueve entre los way points hasta que te acercas mucho
+y te empieza a perseguir hasta que te alejas
+
+Próximas versiones
+
+Hacer que el enemigo se mueva, se pueda morir, y pueda atacar.
+Poder aggarrarse a los salientes.
+Poder subir y bajar escaleras.
+Poder atacar
+
