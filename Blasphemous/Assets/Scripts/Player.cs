@@ -8,10 +8,15 @@ public class Player : MonoBehaviour
     [SerializeField] int velocidadSalto = 20;
     [SerializeField] GameObject enemy;
     [SerializeField] CircleCollider2D atackCollider;
+    [SerializeField] Rigidbody2D rigidBodyPlayer;
+
 
     float xInicial, yInicial, alturaPersonaje;
     bool saltando;
     private Animator anim;
+
+
+    bool mirandoIzq;
     void Start()
     {
         xInicial = transform.position.x;
@@ -20,28 +25,56 @@ public class Player : MonoBehaviour
         alturaPersonaje = GetComponent<Collider2D>().bounds.size.y;
         anim = gameObject.GetComponent<Animator>();
         atackCollider.enabled = false;
+        mirandoIzq = false;
+
     }
 
     void Update()
     {
         float horizontal = Input.GetAxis("Horizontal");
-        transform.Translate(horizontal * velocidad * Time.deltaTime, 0, 0);
 
-        float salto = Input.GetAxis("Jump");
-        if (salto > 0)
+        if ((horizontal > 0 || horizontal < 0) && !saltando)
+        {
+            anim.Play("correr");
+        }
+        if (mirandoIzq)
+        {
+            transform.Translate(-(horizontal * velocidad * Time.deltaTime), 0, 0);
+        }
+        else
+        transform.Translate((horizontal * velocidad * Time.deltaTime), 0, 0);
+
+        if (horizontal < 0)
+        {
+            transform.eulerAngles = new Vector2(0, 180);
+            mirandoIzq = true;
+        }
+        else if(horizontal > 0)
+        {
+            transform.eulerAngles = new Vector2(0, 0);
+            mirandoIzq = false;
+        }
+
+        
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             RaycastHit2D hit = Physics2D.Raycast(transform.position,
             new Vector2(0, -1));
-            if (hit.collider != null)
+            if (hit.collider != null && hit.collider.gameObject.name != "player")
             {
                 float distanciaAlSuelo = hit.distance;
                 bool tocandoElSuelo = distanciaAlSuelo < alturaPersonaje;
 
                 if (tocandoElSuelo)
                 {
-                    Vector3 fuerzaSalto = new Vector3(0, velocidadSalto, 0);
-                    GetComponent<Rigidbody2D>().AddForce(fuerzaSalto);
+                    saltando = false;
                 }
+            }
+            if (!saltando)
+            {
+                rigidBodyPlayer.AddForce(new Vector2(0, 4), ForceMode2D.Impulse);
+                anim.Play("salto");
+                saltando = true;
             }
         }
 

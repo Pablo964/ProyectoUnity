@@ -21,24 +21,30 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        if(Vector3.Distance(transform.position, target.position) < 0)
+        if ((Vector3.Distance(transform.position, target.position) < 6 && 
+            Vector3.Distance(transform.position, target.position) > 1))
         {
-            transform.Rotate(0, 180, 0);
-        }
-        else
-        {
-            transform.Rotate(0, 0, 0);
-        }
-        if ((Vector3.Distance(transform.position, target.position) < 4 && 
-            Vector3.Distance(transform.position, target.position) > 1) || 
-            (Vector3.Distance(transform.position, target.position) < -4 &&
-            Vector3.Distance(transform.position, target.position) > -1))
-        {
+            if (transform.position.x > target.position.x)
+            {
+                transform.eulerAngles = new Vector2(0, 180);
+            }
+            else
+            {
+                transform.eulerAngles = new Vector2(0, 0);
+            }
             transform.position = Vector2.MoveTowards(transform.position,
             target.position, speed * Time.deltaTime);
         }
-        else if(Vector3.Distance(transform.position, target.position) > 4.1)
+        else if(Vector3.Distance(transform.position, target.position) >= 6)
         {
+            if (transform.position.x > wayPoints[nextPosition].transform.position.x)
+            {
+                transform.eulerAngles = new Vector2(0, 180);
+            }
+            else
+            {
+                transform.eulerAngles = new Vector2(0, 0);
+            }
             transform.position = Vector3.MoveTowards(
                 transform.position,
                 wayPoints[nextPosition].transform.position,
@@ -52,10 +58,11 @@ public class Enemy : MonoBehaviour
                     nextPosition = 0;
             }
         }
+        
         if (Vector3.Distance(transform.position, target.position) <= 1.1 ||
                 Vector3.Distance(transform.position, target.position) <= -1.1)
         {
-            //enemyAtackCollider.enabled = true;
+            enemyAtackCollider.enabled = true;
         }
     }
     private void OnTriggerEnter2D(Collider2D other)
