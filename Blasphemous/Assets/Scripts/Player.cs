@@ -32,8 +32,10 @@ public class Player : MonoBehaviour
     void Update()
     {
         float horizontal = Input.GetAxis("Horizontal");
-
-        if ((horizontal > 0 || horizontal < 0) && !saltando)
+        Debug.Log(saltando);
+        if ((horizontal > 0 || horizontal < 0)
+           && !this.anim.GetCurrentAnimatorStateInfo(0).IsName("salto")
+           && !this.anim.GetCurrentAnimatorStateInfo(0).IsName("golpear"))
         {
             anim.Play("correr");
         }
@@ -60,7 +62,7 @@ public class Player : MonoBehaviour
         {
             RaycastHit2D hit = Physics2D.Raycast(transform.position,
             new Vector2(0, -1));
-            if (hit.collider != null && hit.collider.gameObject.name != "player")
+            if (hit.collider != null)
             {
                 float distanciaAlSuelo = hit.distance;
                 bool tocandoElSuelo = distanciaAlSuelo < alturaPersonaje;
@@ -103,12 +105,18 @@ public class Player : MonoBehaviour
         {
             if (atackCollider.enabled)
             {
-                Destroy(enemy);
+                Destroy(other.gameObject);
             }
             else
             {
                 Debug.Log("Tocado");
                 FindObjectOfType<GameController>().SendMessage("PerderVida");
+                if (Enemy.mirandoIzq)
+                    rigidBodyPlayer.AddForce(new Vector2(-1, 0),
+                        ForceMode2D.Impulse);
+                else
+                rigidBodyPlayer.AddForce(new Vector2(1, 0),
+                    ForceMode2D.Impulse);
             }
         }
     }

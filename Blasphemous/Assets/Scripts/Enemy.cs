@@ -6,8 +6,9 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] List<Transform> wayPoints;
     private byte nextPosition;
-    [SerializeField] float speed = 2f;
+    [SerializeField] float speed = 1f;
     [SerializeField] BoxCollider2D enemyAtackCollider;
+    public static bool mirandoIzq = false;
 
     private float changeDistance = 0.2f;
 
@@ -22,28 +23,32 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         if ((Vector3.Distance(transform.position, target.position) < 6 && 
-            Vector3.Distance(transform.position, target.position) > 1))
+            Vector3.Distance(transform.position, target.position) > 0))
         {
             if (transform.position.x > target.position.x)
             {
-                transform.eulerAngles = new Vector2(0, 180);
+                transform.eulerAngles = new Vector2(0, 0);
+                mirandoIzq = true;
             }
             else
             {
-                transform.eulerAngles = new Vector2(0, 0);
+                transform.eulerAngles = new Vector2(0, 180);
+                mirandoIzq = false;
             }
             transform.position = Vector2.MoveTowards(transform.position,
-            target.position, speed * Time.deltaTime);
+            new Vector2(target.position.x, -1.77f), speed * Time.deltaTime);
         }
         else if(Vector3.Distance(transform.position, target.position) >= 6)
         {
             if (transform.position.x > wayPoints[nextPosition].transform.position.x)
             {
-                transform.eulerAngles = new Vector2(0, 180);
+                transform.eulerAngles = new Vector2(0, 0);
+                mirandoIzq = false;
             }
             else
             {
-                transform.eulerAngles = new Vector2(0, 0);
+                transform.eulerAngles = new Vector2(0, 180);
+                mirandoIzq = false;
             }
             transform.position = Vector3.MoveTowards(
                 transform.position,
@@ -71,7 +76,7 @@ public class Enemy : MonoBehaviour
         {
             if (enemyAtackCollider.enabled)
             {
-                FindObjectOfType<Player>().SendMessage("Recolocar");
+                //FindObjectOfType<Player>().SendMessage("Recolocar");
             }
         }
     }
